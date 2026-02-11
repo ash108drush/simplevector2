@@ -266,7 +266,7 @@ void TestReserveMethod() {
 
     cout << "Done!"s << endl;
 }
-/*
+
 
 
 class X {
@@ -325,7 +325,10 @@ void TestNamedMoveConstructor() {
     assert(vector_to_move.GetSize() == size);
 
     SimpleVector<int> moved_vector(move(vector_to_move));
-    assert(moved_vector.GetSize() == size);
+  //  cout << moved_vector.GetSize() << endl ;
+  //  cout << vector_to_move.GetSize()  << endl;
+
+      assert(moved_vector.GetSize() == size);
     assert(vector_to_move.GetSize() == 0);
     cout << "Done!" << endl << endl;
 }
@@ -341,7 +344,7 @@ void TestNamedMoveOperator() {
     assert(vector_to_move.GetSize() == 0);
     cout << "Done!" << endl << endl;
 }
-
+/*
 void TestNoncopiableMoveConstructor() {
     const size_t size = 5;
     cout << "Test noncopiable object, move constructor" << endl;
@@ -417,10 +420,13 @@ int main() {
     Test2();
     TestReserveConstructor();
     TestReserveMethod();
-/*
+
     TestTemporaryObjConstructor();
+
     TestTemporaryObjOperator();
+
     TestNamedMoveConstructor();
+    /*
     TestNamedMoveOperator();
     TestNoncopiableMoveConstructor();
     TestNoncopiablePushBack();

@@ -5,6 +5,7 @@
 #include <stdexcept>
 #include <algorithm>
 #include <iostream>
+#include <utility>
 #include "array_ptr.h"
 using namespace std;
 
@@ -49,8 +50,20 @@ public:
         if(init.size() >0){
              copy(init.begin(),init.end(),begin());
         }
-
     }
+
+    SimpleVector(SimpleVector&& other){
+        if(size_!=0){
+            return;
+        }
+        size_=exchange(other.size_, 0);
+        capacity_=exchange(other.capacity_,0);
+        copy(make_move_iterator(other.begin()),make_move_iterator(other.end()),begin());
+
+    };
+
+
+    SimpleVector& operator=(SimpleVector&& other) = default;
 
     SimpleVector(ReserveProxyObj obj):items_(obj.GetCapacity()){
         capacity_=0;
