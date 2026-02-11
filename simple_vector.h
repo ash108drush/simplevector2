@@ -63,7 +63,12 @@ public:
     };
 
 
-    SimpleVector& operator=(SimpleVector&& other) = default;
+    SimpleVector& operator=(SimpleVector&& other) {
+        size_=exchange(other.size_, 0);
+        capacity_=exchange(other.capacity_,0);
+        copy(make_move_iterator(other.begin()),make_move_iterator(other.end()),begin());
+        return *this;
+    }
 
     SimpleVector(ReserveProxyObj obj):items_(obj.GetCapacity()){
         capacity_=0;

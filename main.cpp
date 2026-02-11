@@ -344,7 +344,7 @@ void TestNamedMoveOperator() {
     assert(vector_to_move.GetSize() == 0);
     cout << "Done!" << endl << endl;
 }
-/*
+
 void TestNoncopiableMoveConstructor() {
     const size_t size = 5;
     cout << "Test noncopiable object, move constructor" << endl;
@@ -362,7 +362,7 @@ void TestNoncopiableMoveConstructor() {
     }
     cout << "Done!" << endl << endl;
 }
-
+/*
 void TestNoncopiablePushBack() {
     const size_t size = 5;
     cout << "Test noncopiable push back" << endl;
@@ -426,9 +426,11 @@ int main() {
     TestTemporaryObjOperator();
 
     TestNamedMoveConstructor();
-    /*
+
     TestNamedMoveOperator();
+
     TestNoncopiableMoveConstructor();
+      /*
     TestNoncopiablePushBack();
     TestNoncopiableInsert();
     TestNoncopiableErase();
