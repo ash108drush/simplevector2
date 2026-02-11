@@ -1,1 +1,0 @@
-/bin/g++-15 -DQT_QML_DEBUG -g -Wl,--dependency-file=CMakeFiles/simplevector.dir/link.d CMakeFiles/simplevector.dir/main.cpp.o -o simplevector
