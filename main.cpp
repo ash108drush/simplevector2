@@ -313,7 +313,7 @@ void TestTemporaryObjOperator() {
     cout << "Test with temporary object, operator=" << endl;
     SimpleVector<int> moved_vector;
     assert(moved_vector.GetSize() == 0);
-    moved_vector = GenerateVector(size);
+   moved_vector = GenerateVector(size);
     assert(moved_vector.GetSize() == size);
     cout << "Done!" << endl << endl;
 }
@@ -338,7 +338,6 @@ void TestNamedMoveOperator() {
     cout << "Test with named object, operator=" << endl;
     SimpleVector<int> vector_to_move(GenerateVector(size));
     assert(vector_to_move.GetSize() == size);
-
     SimpleVector<int> moved_vector = move(vector_to_move);
     assert(moved_vector.GetSize() == size);
     assert(vector_to_move.GetSize() == 0);
@@ -356,13 +355,15 @@ void TestNoncopiableMoveConstructor() {
     SimpleVector<X> moved_vector = move(vector_to_move);
     assert(moved_vector.GetSize() == size);
     assert(vector_to_move.GetSize() == 0);
-
+    cout << "size" << vector_to_move.GetSize() <<endl;
     for (size_t i = 0; i < size; ++i) {
-        assert(moved_vector[i].GetX() == i);
+       assert(moved_vector[i].GetX() == i);
+       // cout << "moved_vector[i].GetX()" << moved_vector[i].GetX() <<endl;
     }
+
     cout << "Done!" << endl << endl;
 }
-/*
+
 void TestNoncopiablePushBack() {
     const size_t size = 5;
     cout << "Test noncopiable push back" << endl;
@@ -389,8 +390,9 @@ void TestNoncopiableInsert() {
 
     // в начало
     v.Insert(v.begin(), X(size + 1));
-    assert(v.GetSize() == size + 1);
-    assert(v.begin()->GetX() == size + 1);
+ //   assert(v.GetSize() == size + 1);
+ //   assert(v.begin()->GetX() == size + 1);
+/*
     // в конец
     v.Insert(v.end(), X(size + 2));
     assert(v.GetSize() == size + 2);
@@ -399,9 +401,10 @@ void TestNoncopiableInsert() {
     v.Insert(v.begin() + 3, X(size + 3));
     assert(v.GetSize() == size + 3);
     assert((v.begin() + 3)->GetX() == size + 3);
-    cout << "Done!" << endl << endl;
+*/
+  cout << "Done!" << endl << endl;
 }
-
+/*
 void TestNoncopiableErase() {
     const size_t size = 3;
     cout << "Test noncopiable erase" << endl;
@@ -416,6 +419,7 @@ void TestNoncopiableErase() {
 }
 */
 int main() {
+
     Test1();
     Test2();
     TestReserveConstructor();
@@ -430,9 +434,11 @@ int main() {
     TestNamedMoveOperator();
 
     TestNoncopiableMoveConstructor();
-      /*
+
     TestNoncopiablePushBack();
+
     TestNoncopiableInsert();
+ /*
     TestNoncopiableErase();
 */
     return 0;

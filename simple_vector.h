@@ -53,20 +53,72 @@ public:
     }
 
     SimpleVector(SimpleVector&& other){
-        if(size_!=0){
-            return;
-        }
+       // if(size_!=0){
+       //     return;
+      //  }
         size_=exchange(other.size_, 0);
         capacity_=exchange(other.capacity_,0);
-        copy(make_move_iterator(other.begin()),make_move_iterator(other.end()),begin());
+        //copy(make_move_iterator(other.begin()),make_move_iterator(other.end()),begin());
+        items_.swap(other.items_);
+        other.items_.Release();
 
+
+        cout << "constructor with nno c copy only move" << endl;
     };
-
+/*
+   SimpleVector& operator=(SimpleVector& other) {
+       size_=other.size_;
+       capacity_=other.capacity_;
+       ArrayPtr<Type> tmp_items(capacity_);
+       copy(other.begin(),other.end(),tmp_items.Get());
+       items_.swap(tmp_items);
+       cout << "hello operator =" << endl;
+       return *this;
+   }
 
     SimpleVector& operator=(SimpleVector&& other) {
         size_=exchange(other.size_, 0);
         capacity_=exchange(other.capacity_,0);
         copy(make_move_iterator(other.begin()),make_move_iterator(other.end()),begin());
+        cout << "hello operator = move" << endl;
+        return *this;
+    }
+*/
+    SimpleVector(const SimpleVector& other) {
+        assert(size_ == 0);
+        SimpleVector tmp(other.size_);
+        copy(other.begin(),other.end(),tmp.begin());
+        swap(tmp);
+        cout << "constructor copy" << endl;
+    }
+
+   // SimpleVector& operator=(const SimpleVector& rhs) {
+   //     SimpleVector s_copy(rhs);
+   //     swap(s_copy);
+   //     return *this;
+   // }
+    SimpleVector& operator=(const SimpleVector& other) {
+        if (this == &other) {
+            return *this;
+        }
+        size_=other.size_;
+        capacity_=other.capacity_;
+        ArrayPtr<Type> tmp_items(capacity_);
+        copy(other.begin(),other.end(),tmp_items.Get());
+        items_.swap(tmp_items);
+        cout << "hello operator = common" << endl;
+        return *this;
+    }
+    SimpleVector& operator=(SimpleVector&& other) {
+        if (this == &other) {
+            return *this;
+        }
+
+        size_=exchange(other.size_, 0);
+        capacity_=exchange(other.capacity_,0);
+        items_.swap(other.items_);
+        other.items_.Release();
+        cout << "hello operator = move" << endl;
         return *this;
     }
 
@@ -115,21 +167,7 @@ public:
         size_=0;
     }
 
-    void Resize(size_t new_size) {
-        if(new_size==size_){
-            return;
-        }
-        if(new_size < size_){
-                size_ = new_size;
-        }else{
-            capacity_=max(new_size,capacity_*2);
-            ArrayPtr<Type> new_items(capacity_);
-            fill(new_items.Get(),new_items.Get()+capacity_,Type{});
-            copy(begin(),begin()+size_,new_items.Get());
-            items_.swap(new_items);
-            size_=new_size;
-        }
-    }
+
 
     Iterator begin() noexcept {
         return size_ == 0 ? nullptr : items_.Get();
@@ -156,18 +194,8 @@ public:
         return size_ == 0 ? nullptr : items_.Get()+size_;
     }
 
-    SimpleVector(const SimpleVector& other) {
-        assert(size_ == 0);
-        SimpleVector tmp(other.size_);
-        copy(other.begin(),other.end(),tmp.begin());
-        swap(tmp);
-     }
 
-     SimpleVector& operator=(const SimpleVector& rhs) {
-         SimpleVector s_copy(rhs);
-         swap(s_copy);
-         return *this;
-     }
+
 
      void PushBack(const Type& item) {
          if(size_ < capacity_){
@@ -175,6 +203,46 @@ public:
           }else{
              Resize(size_+1);
              items_[size_-1]=item;
+         }
+     }
+     void Resize(size_t new_size) {
+         if(new_size==size_){
+             return;
+         }
+         if(new_size < size_){
+             size_ = new_size;
+         }else{
+             capacity_=max(new_size,capacity_*2);
+             ArrayPtr<Type> new_items(capacity_);
+             fill(new_items.Get(),new_items.Get()+capacity_,Type{});
+             copy(begin(),begin()+size_,new_items.Get());
+             items_.swap(new_items);
+             size_=new_size;
+         }
+     }
+
+     void PushBack(Type&& item) {
+         if(size_ < capacity_){
+             items_[size_++]=move(item);
+         }else{
+             ResizeMove(size_+1);
+             items_[size_-1]=move(item);
+         }
+     }
+
+     void ResizeMove(size_t new_size) {
+         if(new_size==size_){
+             return;
+         }
+         if(new_size < size_){
+             size_ = new_size;
+         }else{
+             capacity_=max(new_size,capacity_*2);
+             ArrayPtr<Type> new_items(capacity_);
+            // fill(new_items.Get(),new_items.Get()+capacity_,Type{});
+             copy(make_move_iterator(begin()),make_move_iterator(begin()+size_),new_items.Get());
+             items_.swap(new_items);
+             size_=new_size;
          }
      }
 
@@ -207,7 +275,25 @@ public:
              return (begin()+iterator_shift);
 
      }
+/*
+     Iterator Insert(ConstIterator&& pos, Type&& value) {
+         int iterator_shift=pos-begin();
+         ArrayPtr<Type> new_items(size_+1);
+         if(capacity_==0){
+             capacity_=1;
+         }else if(size_ == capacity_){
+             capacity_=capacity_*2;
+         }
+         cout << "hello insert here" << endl;
+         copy(make_move_iterator(begin()),make_move_iterator(begin()+iterator_shift),new_items.Get());
+         copy_backward(make_move_iterator(begin()+iterator_shift),make_move_iterator(end()),new_items.Get()+(size_+1));
+      //   new_items[iterator_shift]=value; //exchange(value,0);
+         items_.swap(new_items);
+         ++size_;
+         return (begin()+iterator_shift);
 
+     }
+*/
      void PopBack() noexcept {
          if(size_ ==0){
              return;
