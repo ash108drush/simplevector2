@@ -275,8 +275,8 @@ public:
              return (begin()+iterator_shift);
 
      }
-/*
-     Iterator Insert(ConstIterator&& pos, Type&& value) {
+
+     Iterator Insert(ConstIterator pos, Type&& value) {
          int iterator_shift=pos-begin();
          ArrayPtr<Type> new_items(size_+1);
          if(capacity_==0){
@@ -293,7 +293,7 @@ public:
          return (begin()+iterator_shift);
 
      }
-*/
+
      void PopBack() noexcept {
          if(size_ ==0){
              return;

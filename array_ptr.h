@@ -1,5 +1,6 @@
 #include <cstdlib>
 #include<algorithm>
+#include <utility>
 template <typename Type>
 class ArrayPtr {
 public:
@@ -13,12 +14,20 @@ public:
     }
 
     ArrayPtr(const ArrayPtr&) = delete;
+    ArrayPtr(ArrayPtr&& other){
+        ArrayPtr tmp(other.Release());
+        swap(raw_ptr_,tmp.raw_ptr_);
+    };
 
     ~ArrayPtr() {
         delete[] raw_ptr_;
     }
 
     ArrayPtr& operator=(const ArrayPtr&) = delete;
+    ArrayPtr& operator=(ArrayPtr&& other){
+        ArrayPtr tmp(other.Release());
+        swap(raw_ptr_,tmp.raw_ptr_);
+    };
 
     [[nodiscard]] Type* Release() noexcept {
         Type *ptr=raw_ptr_;
